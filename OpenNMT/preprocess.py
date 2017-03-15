@@ -89,7 +89,7 @@ def saveVocabulary(name, vocab, file):
     vocab.writeFile(file)
 
 
-def makeData(srcFile, tgtFile, srcDicts, tgtDicts):
+def makeData(srcFile, tgtFile, srcDicts, tgtDicts, valtest=False):
     src, tgt = [], []
     sizes = []
     count, ignored = 0, 0
@@ -128,6 +128,10 @@ def makeData(srcFile, tgtFile, srcDicts, tgtDicts):
     srcF.close()
     tgtF.close()
 
+    if valtest:
+      print(src,tgt)
+      return src, tgt
+
     if opt.shuffle == 1:
         print('... shuffling sentences')
         perm = torch.randperm(len(src))
@@ -163,6 +167,12 @@ def main():
     valid = {}
     valid['src'], valid['tgt'] = makeData(opt.valid_src, opt.valid_tgt,
                                     dicts['src'], dicts['tgt'])
+
+    
+    print('Preparing validation for testing ...')
+    valtest = {}
+    valtest['src'], valtest['tgt'] = makeData("data/src-val-test.txt", "data/tgt-val-test.txt",
+                                    dicts['src'], dicts['tgt'],valtest=True)
 
     if opt.src_vocab is None:
         saveVocabulary('source', dicts['src'], opt.save_data + '.src.dict')
