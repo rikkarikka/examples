@@ -183,7 +183,8 @@ def main():
     print('Saving data to \'' + opt.save_data + '-train.pt\'...')
     save_data = {'dicts': dicts,
                  'train': train,
-                 'valid': valid}
+                 'valid': valid,
+                 'valtest':valtest}
     torch.save(save_data, opt.save_data + '-train.pt')
 
 
